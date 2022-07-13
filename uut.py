@@ -1,9 +1,45 @@
 from isc_dhcp_leases import Lease, IscDhcpLeases
 import subprocess
+import urllib.parse
+import logging
+
+import settings
 
 class Uut:
     user = 'admin'
     passwd = 'admin'
+
+
+    def getSolCmd(self):
+        pass
+
+    def getWebSshLink(self):
+        pass
+
+    def getWebSSHService(self):
+        return settings.webssh['host']
+
+    def getWebSolHost(self):
+        parsed = urllib.parse.urlparse(settings.webssh['host'])
+        netloc = parsed.netloc
+        if ':' in netloc:
+            # get the part before ':'
+            netloc = netloc.split(':', 1)[0]
+        return netloc
+
+    def getWebSshSolTitle(self):
+        return self.sn
+
+    def getWebSolCmdUrlEncoded(self):
+        cmd = f'ipmitool -H {self.bmc.ip} -U {Uut.user} -P {Uut.passwd} -I lanplus sol activate'
+        return urllib.parse.quote(cmd.encode())
+
+    def getWebSolUser(self):
+        return 'webssh'
+    
+    def getWebSolPassBase64(self):
+        # based64 coded from webssh
+        return 'd2Vic3No'
 
     def __init_chassis_sn(self):
         cmd = f'ipmitool -H {self.bmc.ip} -U {Uut.user} -P {Uut.passwd} fru print'
@@ -17,7 +53,7 @@ class Uut:
         """ Initialize the UUT from the lease file 
         """
         self.bmc = None
-        print(lease)
+        logging.debug(lease)
         if lease.sets.get('vendor-string') == 'udhcp 1.21.1':
             self.bmc = lease
             self.sn = self.__init_chassis_sn()
