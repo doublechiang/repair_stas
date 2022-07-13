@@ -9,12 +9,23 @@
 
 <table class="sortable">
     <tr>
-        <th>MAC</th><th>BMC IP</th><th>Lease Time</th><th>SN</th>
+        <th>MAC</th><th>SOL to BMC IP</th><th>Lease Time</th><th>SN</th>
     </tr>
     {% for l in cur_list %}
         <tr>
             <td> {{l.bmc.ethernet}} </td>
-            <td> {{l.bmc.ip}} </td>
+            <td>
+                <form style="display: none" action={{ l.getWebSSHService() }} method="get" enctype="multipart/form-data" novalidate>
+                    <button type="submit" formtarget="_blank" id="{{ l.bmc.ethernet }}_ts"> 
+                      <input name='hostname' value={{ l.getWebSolHost() }}>
+                      <input name='username' value={{ l.getWebSolUser() }}>
+                      <input name='password' value={{ l.getWebSolPassBase64() }}>
+                      <input name='command' value = {{ l.getWebSolCmdUrlEncoded() }}>
+                      <input name='title' value = {{ l.getWebSshSolTitle() }}>
+                    </button>
+                </form>
+                <label style="text-decoration: underline" for={{ l.bmc.ethernet }}_ts>{{l.bmc.ip}}</label>
+                 </td>
             <td> {{l.bmc.start}} </td>
             <td> {{l.sn }} </td>
         </tr>
