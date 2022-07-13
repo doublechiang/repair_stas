@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% block title %} QMF Repair Stations {% endblock %}<br/><br/>
+<head>
+    <meta http-equiv="refresh" content="60">
+</head>
+
+<table class="sortable">
+    <tr>
+        <th>MAC</th><th>BMC IP</th><th>Lease Time</th><th>SN</th>
+    </tr>
+    {% for l in cur_list %}
+        <tr>
+            <td> {{l.bmc.ethernet}} </td>
+            <td> {{l.bmc.ip}} </td>
+            <td> {{l.bmc.start}} </td>
+            <td> {{l.sn }} </td>
+        </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}
