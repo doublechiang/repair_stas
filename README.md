@@ -12,3 +12,6 @@ $ python3 -m flask run
 ## Deployment to Centos with Apache
 
 $yum install python3-mod_wsgi
+
+Create a symbolic link to the conf file
+$ln -s [abs_path]/repair_stas.conf /etc/httpd/conf.d/repair_stas.conf 
