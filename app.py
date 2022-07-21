@@ -26,10 +26,17 @@ def home():
         # sort the list value by start date
         cur_list = list(cur.values())
         cur_list.sort(key=lambda x:x.start, reverse=True)
+        thread_pool = []
         for l in cur_list:
             u = Uut(l)
-            if u.bmc is not None:
-                uut_list.append(u)
+            u.start()
+            thread_pool.append(u)
+
+        for t in thread_pool:
+            t.join()
+        
+        if u.bmc is not None:
+            uut_list.append(u)
     else:
         error = f'Can not locate lease file at {lease_file}'
     return render_template('status.html', cur_list=uut_list, error=error)

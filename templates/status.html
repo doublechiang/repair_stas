@@ -9,7 +9,7 @@
 
 <table class="sortable">
     <tr>
-        <th>MAC</th><th>SOL to BMC IP</th><th>Lease Time</th><th>SN</th>
+        <th>MAC</th><th>SOL to BMC IP</th><th>Lease Time</th><th>SN</th><th>Board SN</th>
     </tr>
     {% for l in cur_list %}
         <tr>
@@ -28,6 +28,7 @@
                  </td>
             <td> {{l.bmc.start}} </td>
             <td> {{l.sn }} </td>
+            <td> {{l.bsn }} </td>
         </tr>
     {% endfor %}
 

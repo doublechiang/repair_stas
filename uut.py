@@ -2,10 +2,11 @@ from isc_dhcp_leases import Lease, IscDhcpLeases
 import subprocess
 import urllib.parse
 import logging
+import threading
 
 import settings
 
-class Uut:
+class Uut(threading.Thread):
     user = 'admin'
     passwd = 'admin'
 
@@ -49,13 +50,30 @@ class Uut:
             if info[0].strip() == 'Chassis Serial':
                 return (info[1].strip())
 
+    def run(self):
+        if self.bmc is not None:
+            cmd = f'ipmitool -H {self.bmc.ip} -U {Uut.user} -P {Uut.passwd} fru print'
+            print(cmd)
+            result = subprocess.run(cmd.split(), stdout=subprocess.PIPE).stdout.decode('utf-8')
+            for l in result.splitlines():
+                info = l.strip().split(':')
+                if info[0].strip() == 'Chassis Serial':
+                    self.sn= (info[1].strip())
+                if info[0].strip() == 'Board Serial':
+                    self.bsn= (info[1].strip())
+
+
     def __init__(self, lease):
         """ Initialize the UUT from the lease file 
         """
+        super(Uut, self).__init__()
         self.bmc = None
         logging.debug(lease)
-        if lease.sets.get('vendor-string') == 'udhcp 1.21.1':
-            self.bmc = lease
-            self.sn = self.__init_chassis_sn()
+        self.sn = None
+        self.bsn = None
 
+        vendor_str = lease.sets.get('vendor-string')
+        if vendor_str is not None:
+            if 'udhcp' in vendor_str:
+                self.bmc = lease
 
