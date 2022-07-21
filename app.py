@@ -32,11 +32,12 @@ def home():
             u.start()
             thread_pool.append(u)
 
-        for t in thread_pool:
-            t.join()
+        for u in thread_pool:
+            u.join()
+            if u.bmc is not None:
+                uut_list.append(u)
+
         
-        if u.bmc is not None:
-            uut_list.append(u)
     else:
         error = f'Can not locate lease file at {lease_file}'
     return render_template('status.html', cur_list=uut_list, error=error)
