@@ -5,6 +5,7 @@ import logging
 import os
 
 from uut import Uut
+from switch import Switch
 
 
 app = Flask(__name__)
@@ -22,13 +23,22 @@ def home():
         lease_file = os.path.basename(lease_file)
         leases = IscDhcpLeases(f'./{lease_file}')
     if leases is not None:
+
+        s= Switch()
+        s.setip('10.16.2.48')
+        mac_port_list = s.getMacTable()
         cur = leases.get_current()
         # sort the list value by start date
         cur_list = list(cur.values())
         cur_list.sort(key=lambda x:x.start, reverse=True)
         thread_pool = []
-        for l in cur_list:
-            u = Uut(l)
+
+        for mac, port in mac_port_list:
+            if port > 48:
+                continue
+            lease = cur.get(mac)
+            u = Uut(lease)
+            u.port = port
             u.start()
             thread_pool.append(u)
 

@@ -61,6 +61,9 @@ class Uut(threading.Thread):
                     self.sn= (info[1].strip())
                 if info[0].strip() == 'Board Serial':
                     self.bsn= (info[1].strip())
+                if info[0].strip() == 'Product Serial':
+                    self.psn= (info[1].strip())
+                
 
 
     def __init__(self, lease):
@@ -71,6 +74,7 @@ class Uut(threading.Thread):
         logging.debug(lease)
         self.sn = None
         self.bsn = None
+        self.psn = None
 
         vendor_str = lease.sets.get('vendor-string')
         if vendor_str is not None:
