@@ -75,9 +75,11 @@ class Uut(threading.Thread):
         self.sn = None
         self.bsn = None
         self.psn = None
+        self.port = None
 
-        vendor_str = lease.sets.get('vendor-string')
-        if vendor_str is not None:
-            if 'udhcp' in vendor_str:
-                self.bmc = lease
+        if lease is not None:
+            vendor_str = lease.sets.get('vendor-string')
+            if vendor_str is not None:
+                if 'udhcp' in vendor_str:
+                    self.bmc = lease
 
