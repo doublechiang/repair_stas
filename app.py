@@ -3,14 +3,39 @@ from flask import Flask, request, redirect, render_template, url_for
 from isc_dhcp_leases import Lease, IscDhcpLeases
 import logging
 import os
+import urllib
+from urllib.parse import urlencode
+import base64
+
 
 from uut import Uut
 from switch import Switch
+import settings
 
 
 app = Flask(__name__)
 app.config['APPLICATION_ROOT'] = 'repair_stas'
 logging.basicConfig(level=logging.DEBUG)
+
+
+@app.route('/upg_bios')
+def upg_bios():
+    bmc_ip = request.args.get('bmc_ip')
+    cmd = f"python3 oob_upg_bios.py {bmc_ip} C2190.BS.3A22.CAP"
+
+    cmd_encode = urllib.parse.quote(cmd.encode())
+
+    webssh = settings.webssh['host']
+    base_url = webssh
+
+    params = dict(username='webssh', 
+        password=base64.b64encode('webssh'.encode()).decode('utf-8'),
+        hostname='192.168.66.53',
+        command = cmd_encode)
+    redirect_url = base_url + '?' + urlencode(params)
+    return redirect(redirect_url)
+
+
 
 @app.route('/', methods=['get', 'post'])
 def home():
