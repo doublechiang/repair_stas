@@ -50,7 +50,7 @@ def home():
     if leases is not None:
 
         s= Switch()
-        s.setip('10.16.2.48')
+        s.setip('10.16.0.2')
         mac_port_list = s.getMacTable()
         cur = leases.get_current()
         # sort the list value by start date
