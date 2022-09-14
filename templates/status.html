@@ -13,10 +13,10 @@
     </tr>
     {% for l in cur_list %}
         <tr>
-            <td> {{l.bmc.ethernet}} </td>
+            <td> {{ l.lease.ethernet }} </td>
             <td>
                 <form style="display: none" action={{ l.getWebSSHService() }} method="get" enctype="multipart/form-data" novalidate>
-                    <button type="submit" formtarget="_blank" id="{{ l.bmc.ethernet }}_ts"> 
+                    <button type="submit" formtarget="_blank" id="{{ l.lease.ethernet }}_ts"> 
                       <input name='hostname' value={{ l.getWebSolHost() }}>
                       <input name='username' value={{ l.getWebSolUser() }}>
                       <input name='password' value={{ l.getWebSolPassBase64() }}>
@@ -24,17 +24,17 @@
                       <input name='title' value = {{ l.getWebSshSolTitle() }}>
                     </button>
                 </form>
-                <label style="text-decoration: underline" for={{ l.bmc.ethernet }}_ts>{{l.bmc.ip}}</label>
+                <label style="text-decoration: underline" for={{ l.lease.ethernet }}_ts>{{l.lease.ip}}</label>
                  </td>
             <td> {{l.sn }} </td>
             <td> {{l.bsn }} </td>
             <td> {{l.psn }} </td>
             <td> {{l.port }}</td>
             <td> 
-                <form style="display: none" target="_blank" action={{ url_for('upg_bios') }} method="get" id="{{l.bmc.ip}}" enctype="multipart/form-data" novalidate>
-                    <input name='bmc_ip' value={{ l.bmc.ip }}>
+                <form style="display: none" target="_blank" action={{ url_for('upg_bios') }} method="get" id="{{l.lease.ip}}" enctype="multipart/form-data" novalidate>
+                    <input name='bmc_ip' value={{ l.lease.ip }}>
                 </form>
-                <button type="submit" form={{l.bmc.ip}} value="Submit">Upg BIOS</button>                
+                <button type="submit" form={{l.lease.ip}} value="Submit">Upg BIOS</button>                
             </td>
         </tr>
     {% endfor %}

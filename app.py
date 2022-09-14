@@ -49,29 +49,31 @@ def home():
         leases = IscDhcpLeases(f'./{lease_file}')
     if leases is not None:
 
-        s= Switch()
-        s.setip('10.16.0.2')
-        mac_port_list = s.getMacTable()
+        mac_port_list = Switch.getMgmtMacTable(settings.mgmt_switch)
+        # logging.debug(f'mac_port_list:{mac_port_list}')
         cur = leases.get_current()
         # sort the list value by start date
         cur_list = list(cur.values())
         cur_list.sort(key=lambda x:x.start, reverse=True)
         thread_pool = []
 
-        for mac, port in mac_port_list:
-            if port > 48:
-                continue
-            lease = cur.get(mac)
-            u = Uut(lease)
-            u.port = port
+        # for mac, port in mac_port_list:
+        #     if port > 48:
+        #         continue
+        """ Query all the current lease"""
+        for s in cur.values():
+            u = Uut(s)
             u.start()
             thread_pool.append(u)
 
         for u in thread_pool:
             u.join()
-            if u.bmc is not None:
+            if u.bmc_active:
+                # get LY9 port number
+                for i in mac_port_list:
+                    if u.lease.ethernet == i.mac:
+                        u.port = i.port
                 uut_list.append(u)
-
         
     else:
         error = f'Can not locate lease file at {lease_file}'
