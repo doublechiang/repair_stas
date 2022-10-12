@@ -17,15 +17,19 @@ class Switch:
             return the mac address and port number of swithport
         """
         mgmt = list(map(Switch, ip_list))
-        mac_table = []
+        mac_tables = []
         for s in mgmt:
-            mac_table.extend(s.getMacTable())
+            mac_table = s.getMacTable()
+            if type(mac_table) is list:
+                mac_tables.extend(mac_table)
 
-        return mac_table
+        return mac_tables
 
 
 
     def getMacTable(self):
+        """ Return MAC table format as named tuple or the Exception 
+        """
         mac_table = []
         MacTable = namedtuple('MacTable', 'mac port')
 
@@ -51,8 +55,9 @@ class Switch:
                                 continue
                             mac_table.append(MacTable(mac, port))
                     # logging.debug(f"switch: {self.ip}, mac_table: {mac_table}")
-        except:
-            logging.error(f"Telnet IO error")
+        except Exception as error:
+            logging.error(error)
+            return error
             
         return mac_table
 

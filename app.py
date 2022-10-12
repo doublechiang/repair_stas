@@ -69,10 +69,11 @@ def home():
         for u in thread_pool:
             u.join()
             if u.bmc_active:
-                # get LY9 port number
-                for i in mac_port_list:
-                    if u.lease.ethernet == i.mac:
-                        u.port = i.port
+                if type(mac_port_list) is list:
+                    # get LY9 port number
+                    for i in mac_port_list:
+                        if u.lease.ethernet == i.mac:
+                            u.port = i.port
                 uut_list.append(u)
         
     else:
