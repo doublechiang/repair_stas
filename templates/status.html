@@ -9,7 +9,7 @@
 
 <table class="sortable">
     <tr>
-        <th>MAC</th><th>SOL to BMC IP</th><th>SN</th><th>Board SN</th><th>Product SN</th><th>LY9 Port</th><th>Upg BIOS</th>
+        <th>MAC</th><th>SOL to BMC IP</th><th>SN</th><th>Board SN</th><th>Product SN</th><th>LY9 Port</th>
     </tr>
     {% for l in cur_list %}
         <tr>
@@ -30,12 +30,6 @@
             <td> {{l.bsn }} </td>
             <td> {{l.psn }} </td>
             <td> {{l.port }}</td>
-            <td> 
-                <form style="display: none" target="_blank" action={{ url_for('upg_bios') }} method="get" id="{{l.lease.ip}}" enctype="multipart/form-data" novalidate>
-                    <input name='bmc_ip' value={{ l.lease.ip }}>
-                </form>
-                <button type="submit" form={{l.lease.ip}} value="Submit">Upg BIOS</button>                
-            </td>
         </tr>
     {% endfor %}
 
