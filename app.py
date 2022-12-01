@@ -30,7 +30,7 @@ def upg_bios():
 
     params = dict(username='webssh', 
         password=base64.b64encode('webssh'.encode()).decode('utf-8'),
-        hostname='192.168.66.53',
+        hostname=settings.hostname,
         command = cmd_encode)
     redirect_url = base_url + '?' + urlencode(params)
     return redirect(redirect_url)
@@ -41,7 +41,7 @@ def upg_bios():
 def home():
     error = None
     uut_list = []
-    lease_file = '/var/lib/dhcpd/dhcpd.leases'
+    lease_file = settings.lease_file
     if os.path.exists(lease_file):
         leases = IscDhcpLeases(lease_file)
     else:

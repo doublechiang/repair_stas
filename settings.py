@@ -2,8 +2,15 @@
     To use: # import settings
 """
 
-webssh = { 'host' : 'http://192.168.66.53:8888' }
+hostname = '192.168.66.53'
 
-mgmt_switch = '10.16.0.2 10.16.0.5'.split()
+lease_file = '/var/lib/dhcpd/dhcpd.leases'
+
+webssh = { 'host' : 'http://{}:8888'.format(hostname) }
+
+gi = '10.16.0.2 10.16.0.5'.split()
+
+
+
 
 
