@@ -6,12 +6,10 @@ import os
 import urllib
 from urllib.parse import urlencode
 import base64
-
-
 from uut import Uut
 from switch import Switch
 import settings
-
+from timeit import default_timer as timer
 
 app = Flask(__name__)
 app.config['APPLICATION_ROOT'] = 'repair_stas'
@@ -50,15 +48,18 @@ def home():
     if leases is not None:
 
         mac_port_list = Switch.getMgmtMacTable(settings.mgmt_switch)
-        # logging.debug(f'mac_port_list:{mac_port_list}')
+   
+
+  
         cur = leases.get_current()
+
         # sort the list value by start date
         cur_list = list(cur.values())
         cur_list.sort(key=lambda x:x.start, reverse=True)
         thread_pool = []
 
         # for mac, port in mac_port_list:
-        #     if port > 48:
+        #     if port > QSFP_PORT_START_INDEX located in switch.py:
         #         continue
         """ Query all the current lease"""
         for s in cur.values():
@@ -75,9 +76,10 @@ def home():
                         if u.lease.ethernet == i.mac:
                             u.port = i.port
                 uut_list.append(u)
-        
+
     else:
         error = f'Can not locate lease file at {lease_file}'
+    
     return render_template('status.html', cur_list=uut_list, error=error)
 
 
