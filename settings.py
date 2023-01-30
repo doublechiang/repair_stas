@@ -1,15 +1,22 @@
+# """ All module are singleton
+#     To use: # import settings
+# """
+
+
 """ All module are singleton
     To use: # import settings
 """
+lease_file = '/var/lib/dhcp/dhcpd.leases'
+hostname = '192.168.204.169'
+webssh = {'host' : f'http://{hostname}:8888'}
 
-hostname = '192.168.66.53'
 
-lease_file = '/var/lib/dhcpd/dhcpd.leases'
 
-webssh = { 'host' : 'http://{}:8888'.format(hostname) }
-
-gi = '10.16.0.2 10.16.0.5'.split()
-
+mgmt_switch = [
+        ['10.16.0.7','SSH',{99 : 'Example'},''],
+        ['10.16.0.2','TN',{99 : 'Example'}, ''],
+        ['10.16.0.8','SSH',{99 :'Example'},'']
+        ]
 
 
 
