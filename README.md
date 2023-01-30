@@ -1,3 +1,9 @@
+# Requirements
+- python3-mod_wsgi
+
+- paramiko
+
+
 # Repaire Stations
 
 This App read the dhcpd lease files. Show the non-expired leased lease.
