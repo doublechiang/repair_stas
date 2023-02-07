@@ -6,6 +6,7 @@
 """ All module are singleton
     To use: # import settings
 """
+refresh_limit_time = 30
 lease_file = '/var/lib/dhcp/dhcpd.leases'
 hostname = '192.168.204.169'
 webssh = {'host' : f'http://{hostname}:8888'}
