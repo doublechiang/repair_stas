@@ -57,10 +57,11 @@ class Switch:
 
     #Grabs Mac Address Table from a switch with SSH Protocol
     def sshSwitch(self,ip):
+        client = None
         try:
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            client.connect(ip,username='admin', password='qmfremont',port=22)
+            client.connect(ip,username='admin', password='qmfremont',port=22,look_for_keys=False,allow_agent=False, timeout = self.TIME_OUT)
             conn = client.invoke_shell()
             conn.sendall('show mac-addr-table vlan 1\n')
             conn.sendall('\n')
@@ -74,9 +75,13 @@ class Switch:
             lines = output.split("\n") 
             client.close()
             return lines
+        except paramiko.BadHostKeyException:
+                self.ssh.get_host_keys().clear()
         except Exception as error:
-                        logging.error(error)
-                        return error 
+                if client:
+                    client.close()
+                logging.error(error)
+                return error 
 
     #Grabs Mac Address Table from a switch with Telnet Protocol
     def telnetSwitch(self,ip):
@@ -141,7 +146,7 @@ class Switch:
 if __name__ == '__main__':
     start = timer()
     mac_table=Switch.getMgmtMacTable([
-                                    ['10.16.0.7','SSH',{99 :'Example'},''],
+                                  ['10.16.0.7','SSH',{99 :'Example'},''],
                                     ['10.16.0.2','TN',{99 :'Example'},''],
                                     ['10.16.0.8','SSH',{99 :'Example'},'']
                                     ])
