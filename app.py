@@ -88,6 +88,6 @@ def home():
         html = (render_template('status.html', cur_list=uut_list, error=error))
         with open("data/repair.html","w") as f:
                 f.write(html)
-        return render_template('status.html', cur_list=uut_list, error=error)
+        return html
 
 
