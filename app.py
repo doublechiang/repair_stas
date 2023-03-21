@@ -86,7 +86,7 @@ def home():
             error = f'Can not locate lease file at {lease_file}'
 
         html = (render_template('status.html', cur_list=uut_list, error=error))
-        with open("data/repair.html","w") as f:
+        with open("data/repair.html","w+") as f:
                 f.write(html)
         return html
 
