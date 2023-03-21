@@ -6,4 +6,4 @@ __pycache__/app.cpython-38.pyc
 __pycache__/settings.cpython-38.pyc
 __pycache__/switch.cpython-38.pyc
 .gitignore
-templates/status.html
+data/repair.html
