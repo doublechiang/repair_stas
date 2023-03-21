@@ -14,7 +14,7 @@ from timeit import default_timer as timer
 SHARED_MAC_TABLES = []
 
 class Switch:
-    TIME_OUT = 2
+    TIME_OUT = 3
     QSFP_PORT_START_INDEX=45
     RESULTS = Queue()
     
@@ -28,7 +28,7 @@ class Switch:
         mgmt = list(map(Switch, ip_list))
         mac_tables = []
         temp = Switch()        
-        numberOfProcesses = 3
+        numberOfProcesses = (len(mgmt))
         tasksToDo = Queue()
         results = temp.RESULTS
         processes = []
@@ -43,8 +43,12 @@ class Switch:
             p.start()
 
         for p in processes:
-            p.join()
-        
+            p.join(Switch.TIME_OUT)
+
+        for process in processes:
+            if (process.is_alive()):
+                process.terminate()
+
         while (not tasksToDo.empty()):
             pass
 
@@ -52,7 +56,7 @@ class Switch:
             grab = results.get()
             mac_table = (MacTable(grab[0],grab[1]))           
             mac_tables.append(mac_table)
-
+        
         return mac_tables
 
     #Grabs Mac Address Table from a switch with SSH Protocol
@@ -61,7 +65,7 @@ class Switch:
         try:
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            client.connect(ip,username='admin', password='qmfremont',port=22,look_for_keys=False,allow_agent=False, timeout = self.TIME_OUT)
+            client.connect(ip,username='admin', password='qmfremont',port=22,look_for_keys=False,allow_agent=False)
             conn = client.invoke_shell()
             conn.sendall('show mac-addr-table vlan 1\n')
             conn.sendall('\n')
@@ -146,9 +150,11 @@ class Switch:
 if __name__ == '__main__':
     start = timer()
     mac_table=Switch.getMgmtMacTable([
+                                    ['10.16.0.82','SSH',{99 :'Example'},''],
                                   ['10.16.0.7','SSH',{99 :'Example'},''],
                                     ['10.16.0.2','TN',{99 :'Example'},''],
                                     ['10.16.0.8','SSH',{99 :'Example'},'']
+                                    
                                     ])
 
     for i in mac_table:
